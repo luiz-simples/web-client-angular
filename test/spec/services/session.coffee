@@ -13,3 +13,7 @@ describe 'Service: Session', () ->
   it 'should exists', () ->
     exist = true
     expect(!!Session).toBe exist
+
+  it 'should start with status not logged', () ->
+    notLogged = false
+    expect(Session.isLogged).toBe notLogged
