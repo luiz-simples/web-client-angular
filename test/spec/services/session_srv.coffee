@@ -1,22 +1,22 @@
 'use strict'
 
-describe 'Service: Session', () ->
+describe 'Service: SessionSrv', () ->
 
   # load the service's module
   beforeEach module 'webClientAngularApp'
 
   # instantiate service
-  Session = {}
-  beforeEach inject (_Session_) ->
-    Session = _Session_
+  SessionSrv = {}
+  beforeEach inject (_SessionSrv_) ->
+    SessionSrv = _SessionSrv_
 
   it 'should exists service.', () ->
     exist = true
-    expect(!!Session).toBe exist
+    expect(!!SessionSrv).toBe exist
 
   it 'should start with status not logged.', () ->
     notLogged = false
-    expect(Session.isLogged).toBe notLogged
+    expect(SessionSrv.isLogged).toBe notLogged
 
   it 'should authenticate with valid user.', () ->
     expect('pending').toEqual('completed')
