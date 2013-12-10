@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('webClientAngularApp')
-  .service 'SessionHelper', () ->
+  .service 'SessionHelper', ["$http", ($http) ->
     sessionHelper =
       clearMessage: (session) ->
         session.messages.error.message = null
@@ -12,4 +12,10 @@ angular.module('webClientAngularApp')
         session.user.password = null
         session.user.password_confirmation = null
 
+      submit = (parameters, callbackSuccess, callbackError) ->
+        $http(parameters)
+          .success callbackSuccess
+          .error callbackError
+
     sessionHelper
+  ]
