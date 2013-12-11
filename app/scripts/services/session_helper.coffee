@@ -12,10 +12,14 @@ angular.module('webClientAngularApp')
         session.user.password = null
         session.user.password_confirmation = null
 
-      submit = (parameters, callbackSuccess, callbackError) ->
-        $http(parameters)
-          .success callbackSuccess
-          .error callbackError
+      submit: (parameters, callbackSuccess, callbackError) ->
+        request = $http(parameters)
+        request.success(callbackSuccess)
+        request.error(callbackError)
+
+      errorRequest: (data, status) ->
+        session.clearSession()
+        session.setErrorMessage(data.errors or data.error)
 
     sessionHelper
   ]

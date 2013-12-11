@@ -9,8 +9,11 @@ describe 'Service: Session', () ->
 
   # instantiate service
   Session = {}
-  beforeEach inject (_Session_) ->
+  $httpBackend = {}
+
+  beforeEach inject (_Session_, _$httpBackend_) ->
     Session = _Session_
+    $httpBackend = _$httpBackend_
 
   #
   it 'should exist Session service.', () ->
@@ -41,30 +44,6 @@ describe 'Service: Session', () ->
     expect(Session.messages).toEqualData emptyMessages
 
   #
-  it 'should change to online status when set user logged.', () ->
-    userFake =
-      name: "User Fake"
-      email: "teste@teste.com.br"
-      password: ""
-
-    Session.setUserLogged userFake
-
-    isLogged = true
-    expect(Session.logged).toBe isLogged
-
-  #
-  it 'should not change to online status when set invalid user.', () ->
-    userFake =
-      name: null
-      email: "teste@teste.com.br"
-      password: ""
-
-    Session.setUserLogged userFake
-
-    isOffline = false
-    expect(Session.logged).toBe isOffline
-
-  #
   it 'should clear messages in a session.', () ->
     messageErrorFake = "Error message of login"
     Session.setErrorMessage messageErrorFake
@@ -77,19 +56,86 @@ describe 'Service: Session', () ->
     expect(Session.messages).toEqualData emptyMessages
 
   #
-  it 'should clear user in a session.', () ->
-    userFake =
-      name: null
-      email: "teste@teste.com.br"
-      password: ""
+  it 'not should change status logged with result empty data', () ->
+    statusWithoutContent = 204
 
-    Session.setUserLogged userFake
-    Session.clearSession()
+    $httpBackend
+      .expect('POST', 'users/sign_in.json', '{"user":{"email":"test@example.com","password":"apassword"}}')
+      .respond statusWithoutContent, ''
 
-    userEmpty =
+    userEmail = 'test@example.com'
+    userPassword = 'apassword'
+    Session.login(userEmail, userPassword)
+
+    $httpBackend.flush()
+
+    isOffline = false
+    expect(Session.logged).toBe isOffline
+
+  #
+  it 'should login with valid user data', () ->
+    statusCreated = 201
+
+    $httpBackend
+      .expect('POST', 'users/sign_in.json', '{"user":{"email":"test@example.com","password":"apassword"}}')
+      .respond statusCreated,
+        name: "User test"
+        email: "test@example.com"
+
+    userEmail = 'test@example.com'
+    userPassword = 'apassword'
+    Session.login(userEmail, userPassword)
+
+    $httpBackend.flush()
+
+    isLogged = true
+    expect(Session.logged).toBe isLogged
+    expect(Session.user).toEqualData
+      name: "User test"
+      email: "test@example.com"
+
+  #
+  it 'should not login without email in user data', () ->
+    statusPartialInformation = 201
+
+    $httpBackend
+      .expect('POST', 'users/sign_in.json', '{"user":{"email":"test@example.com","password":"apassword"}}')
+      .respond statusPartialInformation,
+        name: "User test"
+
+    userEmail = 'test@example.com'
+    userPassword = 'apassword'
+    Session.login(userEmail, userPassword)
+
+    $httpBackend.flush()
+
+    isOffline = false
+    expect(Session.logged).toBe isOffline
+    expect(Session.user).toEqualData
       name: null
       email: null
       password: null
       password_confirmation: null
 
-    expect(Session.user).toEqualData userEmpty
+  #
+  it 'should not login without name in user data', () ->
+    statusPartialInformation = 201
+
+    $httpBackend
+      .expect('POST', 'users/sign_in.json', '{"user":{"email":"test@example.com","password":"apassword"}}')
+      .respond statusPartialInformation,
+        email: "test@example.com"
+
+    userEmail = 'test@example.com'
+    userPassword = 'apassword'
+    Session.login(userEmail, userPassword)
+
+    $httpBackend.flush()
+
+    isOffline = false
+    expect(Session.logged).toBe isOffline
+    expect(Session.user).toEqualData
+      name: null
+      email: null
+      password: null
+      password_confirmation: null

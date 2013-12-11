@@ -1,77 +1,79 @@
 'use strict'
 
 angular.module('webClientAngularApp')
-  .service 'Session', ['SessionHelper', (sessionHelper) ->
-    IS_LOGGED = true
-    IS_OFFLINE = false
+  .service 'Session',
+    ['SessionHelper', 'SessionConfig', 'StatusRequest', 'Validate', (sessionHelper, sessionConfig, statusRequest, validate) ->
+      session =
+        user: sessionConfig.EMPTY_USER
+        logged: sessionConfig.IS_OFFLINE
+        messages: sessionConfig.EMPTY_MESSAGES
 
-    session =
-      user: sessionConfig.EMPTY_USER
-        name: null
-        email: null
-        password: null
-        password_confirmation: null
+        clearSession: () ->
+          session.logged = sessionConfig.IS_OFFLINE
+          sessionHelper.clearUser(session)
+          sessionHelper.clearMessage(session)
 
-      messages: sessionConfig.EMPTY_MESSAGES
-        error:
-          message: null
+        setErrorMessage: (errorMessage) ->
+          session.messages.error.message = errorMessage
 
-      logged: IS_OFFLINE
+        login: (userEmail, userPassword) ->
+          sessionHelper.submit \
+            sessionConfig.login(userEmail, userPassword),
+            (data, status) ->
+              session.setErrorMessage(data.error || data.errors) if data.error or statusRequest.isStatusError(status)
 
-      clearSession: () ->
-        session.logged = IS_OFFLINE
-        sessionHelper.clearUser(session)
-        sessionHelper.clearMessage(session)
+              if statusRequest.isStatusSuccess(status)
+                session.clearSession()
 
-      setUserLogged: (user) ->
-        session.clearSession()
-        session.user = user
-        session.logged = IS_LOGGED if !!session.user.email and !!session.user.name
+                if data instanceof Object and validate.isNotEmpty(data.name) and validate.isEmailValid(data.email) and validate.isNotEmpty(data.name)
+                  session.user = data
+                  session.logged = sessionConfig.IS_LOGGED
+                else
+                  session.setErrorMessage("Login error: Model user is invalid.")
+            ,
+            session.setErrorMessage
 
-      setErrorMessage: (errorMessage) ->
-        session.messages.error.message = errorMessage
+        logout: () ->
+          sessionHelper.submit \
+            sessionConfig.logout(),
+            (data, status) ->
+            ,
+            session.setErrorMessage
 
-      login: (userEmail, userPassword) ->
-        sessionHelper.submit \
-          sessionConfig.login(userEmail, userPassword),
-          () ->,
-          () ->
+        unlock: (userEmail) ->
+          sessionHelper.submit \
+            sessionConfig.unlock(userEmail),
+            (data, status) ->
+            ,
+            session.setErrorMessage
 
-      logout: () ->
-        sessionHelper.submit \
-          sessionConfig.logout(),
-          () ->,
-          () ->
+        confirm: (userEmail) ->
+          sessionHelper.submit \
+            sessionConfig.confirm(userEmail),
+            (data, status) ->
+            ,
+            session.setErrorMessage
 
-      unlock: (userEmail) ->
-        sessionHelper.submit \
-          sessionConfig.unlock(userEmail),
-          () ->,
-          () ->
+        reset_password: (userEmail) ->
+          sessionHelper.submit \
+            sessionConfig.reset_password(userEmail),
+            (data, status) ->
+            ,
+            session.setErrorMessage
 
-      confirm: (userEmail) ->
-        sessionHelper.submit \
-          sessionConfig.confirm(userEmail),
-          () ->,
-          () ->
+        register: (userEmail, userPassword, userPasswordConfirmation) ->
+          sessionHelper.submit \
+            sessionConfig.register(userEmail, userPassword, userPasswordConfirmation),
+            (data, status) ->
+            ,
+            session.setErrorMessage
 
-      reset_password: (userEmail) ->
-        sessionHelper.submit \
-          sessionConfig.reset_password(userEmail),
-          () ->,
-          () ->
+        change_password: (userEmail, userPassword, userPasswordConfirmation) ->
+          sessionHelper.submit \
+            sessionConfig.change_password(userEmail, userPassword, userPasswordConfirmation),
+            (data, status) ->
+            ,
+            session.setErrorMessage
 
-      register: (userEmail, userPassword, userPasswordConfirmation) ->
-        sessionHelper.submit \
-          sessionConfig.register(userEmail, userPassword, userPasswordConfirmation),
-          () ->,
-          () ->
-
-      change_password: (userEmail, userPassword, userPasswordConfirmation) ->
-        sessionHelper.submit \
-          sessionConfig.change_password(userEmail, userPassword, userPasswordConfirmation),
-          () ->,
-          () ->
-
-    session
-  ]
+      session
+    ]
