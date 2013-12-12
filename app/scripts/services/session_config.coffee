@@ -4,7 +4,7 @@ angular.module('webClientAngularApp')
   .constant 'SessionConfig',
       login: (userEmail, userPassword) ->
         method: 'POST',
-        url: 'users/sign_in.json',
+        url: 'sessions/sign_in.json',
         data:
           user:
             email: userEmail
@@ -12,41 +12,38 @@ angular.module('webClientAngularApp')
 
       logout: () ->
         method: 'DELETE',
-        url: 'users/sign_out.json',
+        url: 'sessions/sign_out.json',
 
       password_reset: (userEmail) ->
         method: 'POST',
-        url: 'users/password.json',
+        url: 'sessions/password.json',
         data:
           user:
             email: userEmail
 
       unlock: (userEmail) ->
         method: 'POST',
-        url: 'users/unlock.json',
+        url: 'sessions/unlock.json',
         data:
           user:
             email: userEmail
 
       confirm: (userEmail) ->
         method: 'POST',
-        url: 'users/confirmation.json',
+        url: 'sessions/confirmation.json',
         data:
           user:
             email: userEmail
 
-      register: (userEmail, userPassword, userPasswordConfirmation) ->
+      register: (userObject) ->
         method: 'POST',
-        url: 'users/users.json',
+        url: 'sessions/users.json',
         data:
-          user:
-            email: userEmail
-            password: userPassword
-            password_confirmation: userPasswordConfirmation
+          user: userObject
 
       change_password: (userEmail, userPassword, userPasswordConfirmation) ->
         method: 'PUT',
-        url: 'users/users.json',
+        url: 'sessions/password.json',
         data:
           user:
             email: userEmail

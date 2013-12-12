@@ -11,3 +11,9 @@ angular.module('webClientAngularApp')
 
       isNotEmpty: (string) ->
         not validate.isEmpty string
+
+      isValidUserObject: (data, callbackIfTrue, callbackIfFalse) ->
+        if data instanceof Object and validate.isNotEmpty(data.email) and validate.isEmailValid(data.email) and validate.isNotEmpty(data.name)
+          callbackIfTrue(data)
+        else
+          callbackIfFalse(data)

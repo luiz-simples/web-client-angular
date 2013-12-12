@@ -18,10 +18,11 @@ angular.module('webClientAngularApp')
 
       login: (userEmail, userPassword) ->
         sessionRequest.submit sessionConfig.login(userEmail, userPassword), (data) ->
-          if data instanceof Object and validate.isNotEmpty(data.email) and validate.isEmailValid(data.email) and validate.isNotEmpty(data.name)
-            session.setUserOnline data
-            session.setMessageSuccess "Login success: You are connected."
-          else
+          validate.isValidUserObject data
+          , (data) ->
+              session.setUserOnline data
+              session.setMessageSuccess "Login success: You are connected."
+          , (data) ->
             session.setMessageError "Login error: Model user is invalid."
 
       logout: () ->
@@ -31,18 +32,28 @@ angular.module('webClientAngularApp')
 
       unlock: (userEmail) ->
         sessionRequest.submit sessionConfig.unlock(userEmail), (data) ->
+          session.setMessageSuccess "An unlock e-mail has been sent to your e-mail address."
 
       confirm: (userEmail) ->
         sessionRequest.submit sessionConfig.confirm(userEmail), (data) ->
+          session.setMessageSuccess "A new confirmation link has been sent to your e-mail address."
 
       reset_password: (userEmail) ->
-        sessionRequest.submit sessionConfig.reset_password(userEmail), (data) ->
+        sessionRequest.submit sessionConfig.password_reset(userEmail), (data) ->
+          session.setMessageSuccess "Reset instructions have been sent to your e-mail address."
 
-      register: (userEmail, userPassword, userPasswordConfirmation) ->
-        sessionRequest.submit sessionConfig.register(userEmail, userPassword, userPasswordConfirmation), (data) ->
+      register: (userObject) ->
+        sessionRequest.submit sessionConfig.register(userObject), (data) ->
+          validate.isValidUserObject data
+          , (data) ->
+              session.setUserOnline data
+              session.setMessageSuccess "You have been registered and logged in. A confirmation e-mail has been sent to your e-mail address, your access will terminate in 2 days if you do not use the link in that e-mail."
+          , (data) ->
+            session.setMessageError "Register error: Model user is invalid."
 
       change_password: (userEmail, userPassword, userPasswordConfirmation) ->
         sessionRequest.submit sessionConfig.change_password(userEmail, userPassword, userPasswordConfirmation), (data) ->
+          session.setMessageSuccess 'Your password has been updated.'
 
     sessionRequest
   ]
