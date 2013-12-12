@@ -1,8 +1,6 @@
 'use strict'
 
 describe 'Service: validate', () ->
-
-  # load the service's module
   beforeEach module 'webClientAngularApp'
 
   # instantiate service

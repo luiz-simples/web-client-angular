@@ -1,79 +1,44 @@
 'use strict'
 
 angular.module('webClientAngularApp')
-  .service 'Session',
-    ['SessionHelper', 'SessionConfig', 'StatusRequest', 'Validate', (sessionHelper, sessionConfig, statusRequest, validate) ->
-      session =
-        user: sessionConfig.EMPTY_USER
-        logged: sessionConfig.IS_OFFLINE
-        messages: sessionConfig.EMPTY_MESSAGES
+  .service 'Session', () ->
+    session =
+      logged: false
 
-        clearSession: () ->
-          session.logged = sessionConfig.IS_OFFLINE
-          sessionHelper.clearUser(session)
-          sessionHelper.clearMessage(session)
+      user:
+        name: null
+        email: null
+        password: null
+        password_confirmation: null
 
-        setErrorMessage: (errorMessage) ->
-          session.messages.error.message = errorMessage
+      messages:
+        error: null
+        success: null
 
-        login: (userEmail, userPassword) ->
-          sessionHelper.submit \
-            sessionConfig.login(userEmail, userPassword),
-            (data, status) ->
-              session.setErrorMessage(data.error || data.errors) if data.error or statusRequest.isStatusError(status)
+      clearSession: () ->
+        session.logged = false
+        session.clearUser()
+        session.clearMessage()
 
-              if statusRequest.isStatusSuccess(status)
-                session.clearSession()
+      setMessageError: (errorMessage) ->
+        session.messages.error = errorMessage
 
-                if data instanceof Object and validate.isNotEmpty(data.name) and validate.isEmailValid(data.email) and validate.isNotEmpty(data.name)
-                  session.user = data
-                  session.logged = sessionConfig.IS_LOGGED
-                else
-                  session.setErrorMessage("Login error: Model user is invalid.")
-            ,
-            session.setErrorMessage
+      setMessageSuccess: (messageSuccess) ->
+        session.messages.success = messageSuccess
 
-        logout: () ->
-          sessionHelper.submit \
-            sessionConfig.logout(),
-            (data, status) ->
-            ,
-            session.setErrorMessage
+      setUserOnline: (user) ->
+        session.clearSession()
+        session.logged = true
+        session.user = user
 
-        unlock: (userEmail) ->
-          sessionHelper.submit \
-            sessionConfig.unlock(userEmail),
-            (data, status) ->
-            ,
-            session.setErrorMessage
+      clearMessage: () ->
+        session.messages.error = null
+        session.messages.success = null
 
-        confirm: (userEmail) ->
-          sessionHelper.submit \
-            sessionConfig.confirm(userEmail),
-            (data, status) ->
-            ,
-            session.setErrorMessage
+      clearUser: () ->
+        session.user.name = null
+        session.user.email = null
+        session.user.password = null
+        session.user.password_confirmation = null
 
-        reset_password: (userEmail) ->
-          sessionHelper.submit \
-            sessionConfig.reset_password(userEmail),
-            (data, status) ->
-            ,
-            session.setErrorMessage
-
-        register: (userEmail, userPassword, userPasswordConfirmation) ->
-          sessionHelper.submit \
-            sessionConfig.register(userEmail, userPassword, userPasswordConfirmation),
-            (data, status) ->
-            ,
-            session.setErrorMessage
-
-        change_password: (userEmail, userPassword, userPasswordConfirmation) ->
-          sessionHelper.submit \
-            sessionConfig.change_password(userEmail, userPassword, userPasswordConfirmation),
-            (data, status) ->
-            ,
-            session.setErrorMessage
-
-      session
-    ]
+    session

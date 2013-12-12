@@ -2,19 +2,6 @@
 
 angular.module('webClientAngularApp')
   .constant 'SessionConfig',
-      IS_LOGGED: true
-      IS_OFFLINE: false
-
-      EMPTY_USER:
-        name: null
-        email: null
-        password: null
-        password_confirmation: null
-
-      EMPTY_MESSAGES:
-        error:
-          message: null
-
       login: (userEmail, userPassword) ->
         method: 'POST',
         url: 'users/sign_in.json',
