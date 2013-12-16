@@ -32,7 +32,7 @@ module.exports = function (grunt) {
         tasks: ['newer:coffee:dist']
       },
       coffeeTest: {
-        files: ['test/spec/{,*/}*.{coffee,litcoffee,coffee.md}'],
+        files: ['test/unit/spec/{,*/}*.{coffee,litcoffee,coffee.md}'],
         tasks: ['newer:coffee:test', 'karma']
       },
       compass: {
@@ -133,7 +133,7 @@ module.exports = function (grunt) {
       }
     },
 
-    
+
     // Compiles CoffeeScript to JavaScript
     coffee: {
       options: {
@@ -152,15 +152,15 @@ module.exports = function (grunt) {
       test: {
         files: [{
           expand: true,
-          cwd: 'test/spec',
+          cwd: 'test/unit/spec',
           src: '{,*/}*.coffee',
-          dest: '.tmp/spec',
+          dest: '.tmp/unit/spec',
           ext: '.js'
         }]
       }
     },
 
-    
+
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
       options: {
