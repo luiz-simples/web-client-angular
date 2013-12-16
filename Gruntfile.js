@@ -32,7 +32,10 @@ module.exports = function (grunt) {
         tasks: ['newer:coffee:dist']
       },
       coffeeTest: {
-        files: ['test/unit/spec/{,*/}*.{coffee,litcoffee,coffee.md}'],
+        files: [
+                 'test/unit/{,*/}*.{coffee,litcoffee,coffee.md}',
+                 'test/e2e/{,*/}*.{coffee,litcoffee,coffee.md}'
+               ],
         tasks: ['newer:coffee:test', 'karma']
       },
       compass: {
@@ -150,13 +153,23 @@ module.exports = function (grunt) {
         }]
       },
       test: {
-        files: [{
-          expand: true,
-          cwd: 'test/unit/spec',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/unit/spec',
-          ext: '.js'
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: 'test/unit',
+            src: '{,*/}*.coffee',
+            dest: '.tmp/test/unit',
+            ext: '.js'
+          },
+
+          {
+            expand: true,
+            cwd: 'test/e2e',
+            src: '{,*/}*.coffee',
+            dest: '.tmp/test/e2e',
+            ext: '.js'
+          }
+        ]
       }
     },
 
@@ -370,9 +383,16 @@ module.exports = function (grunt) {
         configFile: 'karma.conf.js',
         singleRun: true
       }
+    },
+
+    protractor: {
+      options: {
+        keepAlive: true,
+        configFile: "protractor.config.js"
+      },
+      run: {}
     }
   });
-
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
@@ -398,7 +418,8 @@ module.exports = function (grunt) {
     'concurrent:test',
     'autoprefixer',
     'connect:test',
-    'karma'
+    'karma',
+    'protractor:run'
   ]);
 
   grunt.registerTask('build', [
