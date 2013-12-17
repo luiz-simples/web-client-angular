@@ -4,12 +4,13 @@ angular.module('webClientAngularApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ui.router'
 ])
-  .config ($routeProvider) ->
-    $routeProvider
-      .when '/',
-        templateUrl: 'views/main.html'
+  .config ($stateProvider, $urlRouterProvider) ->
+    $urlRouterProvider.otherwise "/"
+
+    $stateProvider
+      .state "main",
+        url: "/"
+        templateUrl: "views/main.html"
         controller: 'MainCtrl'
-      .otherwise
-        redirectTo: '/'
