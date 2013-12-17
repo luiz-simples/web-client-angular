@@ -9,8 +9,10 @@ angular.module('webClientAngularApp', [
   .config ($stateProvider, $urlRouterProvider) ->
     $urlRouterProvider.otherwise "/"
 
-    $stateProvider
-      .state "main",
-        url: "/"
-        templateUrl: "views/main.html"
-        controller: 'MainCtrl'
+    home =
+      url: "/"
+      name: "home"
+      controller: 'MainCtrl'
+      templateUrl: "views/main.html"
+
+    $stateProvider.state home
