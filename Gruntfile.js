@@ -32,7 +32,10 @@ module.exports = function (grunt) {
         tasks: ['newer:coffee:dist']
       },
       coffeeTest: {
-        files: ['test/spec/{,*/}*.{coffee,litcoffee,coffee.md}'],
+        files: [
+                 'test/unit/{,*/}*.{coffee,litcoffee,coffee.md}',
+                 'test/e2e/{,*/}*.{coffee,litcoffee,coffee.md}'
+               ],
         tasks: ['newer:coffee:test', 'karma']
       },
       compass: {
@@ -133,7 +136,7 @@ module.exports = function (grunt) {
       }
     },
 
-    
+
     // Compiles CoffeeScript to JavaScript
     coffee: {
       options: {
@@ -150,17 +153,27 @@ module.exports = function (grunt) {
         }]
       },
       test: {
-        files: [{
-          expand: true,
-          cwd: 'test/spec',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/spec',
-          ext: '.js'
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: 'test/unit',
+            src: '{,*/}*.coffee',
+            dest: '.tmp/test/unit',
+            ext: '.js'
+          },
+
+          {
+            expand: true,
+            cwd: 'test/e2e',
+            src: '{,*/}*.coffee',
+            dest: '.tmp/test/e2e',
+            ext: '.js'
+          }
+        ]
       }
     },
 
-    
+
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
       options: {
@@ -370,9 +383,16 @@ module.exports = function (grunt) {
         configFile: 'karma.conf.js',
         singleRun: true
       }
+    },
+
+    protractor: {
+      options: {
+        keepAlive: true,
+        configFile: "protractor.config.js"
+      },
+      run: {}
     }
   });
-
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
@@ -398,7 +418,24 @@ module.exports = function (grunt) {
     'concurrent:test',
     'autoprefixer',
     'connect:test',
+    'karma',
+    'protractor:run'
+  ]);
+
+  grunt.registerTask('test-unit', [
+    'clean:server',
+    'concurrent:test',
+    'autoprefixer',
+    'connect:test',
     'karma'
+  ]);
+
+  grunt.registerTask('test-e2e', [
+    'clean:server',
+    'concurrent:test',
+    'autoprefixer',
+    'connect:test',
+    'protractor:run'
   ]);
 
   grunt.registerTask('build', [

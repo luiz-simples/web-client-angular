@@ -20,7 +20,7 @@ module.exports = function(config) {
       'app/scripts/*.coffee',
       'app/scripts/**/*.coffee',
       'test/mock/**/*.coffee',
-      'test/spec/**/*.coffee'
+      'test/unit/**/*.coffee'
     ],
 
     // list of files / patterns to exclude
