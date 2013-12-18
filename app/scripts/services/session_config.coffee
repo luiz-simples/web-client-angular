@@ -2,50 +2,50 @@
 
 angular.module('webClientAngularApp')
   .constant 'SessionConfig',
-      login: (userEmail, userPassword) ->
-        method: 'POST',
-        url: 'sessions/sign_in.json',
-        data:
-          user:
-            email: userEmail
-            password: userPassword
+    register: (userObject) ->
+      method: 'POST',
+      url: 'sessions/users.json',
+      data:
+        user: userObject
 
-      logout: () ->
-        method: 'DELETE',
-        url: 'sessions/sign_out.json',
+    confirm: (userEmail) ->
+      method: 'POST',
+      url: 'sessions/confirmation.json',
+      data:
+        user:
+          email: userEmail
 
-      password_reset: (userEmail) ->
-        method: 'POST',
-        url: 'sessions/password.json',
-        data:
-          user:
-            email: userEmail
+    unlock: (userEmail) ->
+      method: 'POST',
+      url: 'sessions/unlock.json',
+      data:
+        user:
+          email: userEmail
 
-      unlock: (userEmail) ->
-        method: 'POST',
-        url: 'sessions/unlock.json',
-        data:
-          user:
-            email: userEmail
+    logout: () ->
+      method: 'DELETE',
+      url: 'sessions/sign_out.json',
 
-      confirm: (userEmail) ->
-        method: 'POST',
-        url: 'sessions/confirmation.json',
-        data:
-          user:
-            email: userEmail
+    login: (userEmail, userPassword) ->
+      method: 'POST',
+      url: 'sessions/sign_in.json',
+      data:
+        user:
+          email: userEmail
+          password: userPassword
 
-      register: (userObject) ->
-        method: 'POST',
-        url: 'sessions/users.json',
-        data:
-          user: userObject
+    password_reset: (userEmail) ->
+      method: 'POST',
+      url: 'sessions/password.json',
+      data:
+        user:
+          email: userEmail
 
-      change_password: (userEmail, userPassword, userPasswordConfirmation) ->
-        method: 'PUT',
-        url: 'sessions/password.json',
-        data:
-          user:
-            email: userEmail
-            password: userPassword
-            password_confirmation: userPasswordConfirmation
+    change_password: (userEmail, userPassword, userPasswordConfirmation) ->
+      method: 'PUT',
+      url: 'sessions/password.json',
+      data:
+        user:
+          email: userEmail
+          password: userPassword
+          password_confirmation: userPasswordConfirmation

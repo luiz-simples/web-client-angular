@@ -15,11 +15,12 @@ describe 'Service: SessionRequest', () ->
   isOffline = false
   isLogged = true
   emailFake = "test@example.com"
+  uservalid =
+    name: "User test"
+    email: "test@example.com"
 
   setUserFakeLogged = () ->
-    session.setUserOnline
-      name: "User test"
-      email: "test@example.com"
+    session.setUserOnline uservalid
     expect(session.logged).toBe isLogged
 
   beforeEach inject (_SessionRequest_, _$httpBackend_, _Session_) ->
@@ -55,8 +56,6 @@ describe 'Service: SessionRequest', () ->
       expect(session.messages.error).toEqual 'Login error: Model user is invalid.'
 
     it 'should login with valid user data', () ->
-      statusWithoutContent = 204
-
       $httpBackend
         .expect('POST', 'sessions/sign_in.json', '{"user":{"email":"test@example.com","password":"apassword"}}')
         .respond statusWithoutContent,
