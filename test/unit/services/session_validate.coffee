@@ -1,6 +1,6 @@
 'use strict'
 
-describe 'Service: Validate', () ->
+describe 'Service: SessionValidate', () ->
   beforeEach ->
     @addMatchers toEqualData: (expected) ->
       angular.equals @actual, expected
@@ -15,8 +15,8 @@ describe 'Service: Validate', () ->
   emailInvalid = false
   validUser = true
 
-  beforeEach inject (_Validate_) ->
-    validate = _Validate_
+  beforeEach inject (_SessionValidate_) ->
+    validate = _SessionValidate_
 
   it 'should exist service', () ->
     objExist = true

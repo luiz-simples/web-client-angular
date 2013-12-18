@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('webClientAngularApp')
-  .service 'SessionRequest', ['$http', 'Session', 'SessionConfig', 'Validate', ($http, session, sessionConfig, validate) ->
+  .service 'SessionRequest', ['$http', 'Session', 'SessionConfig', 'SessionValidate', ($http, session, config, validate) ->
     sessionRequest =
       submit: (parameters, callbackSuccess, callbackError) ->
         request = $http parameters
@@ -17,7 +17,7 @@ angular.module('webClientAngularApp')
           callbackError(data, status) if callbackError
 
       login: (userEmail, userPassword) ->
-        sessionRequest.submit sessionConfig.login(userEmail, userPassword), (data) ->
+        sessionRequest.submit config.login(userEmail, userPassword), (data) ->
           validate.isValidUserObject data
           , (data) ->
               session.setUserOnline data
@@ -27,23 +27,23 @@ angular.module('webClientAngularApp')
 
       logout: () ->
         session.clearSession()
-        sessionRequest.submit sessionConfig.logout(), (data) ->
+        sessionRequest.submit config.logout(), (data) ->
           session.setMessageSuccess "You have been logged out."
 
       unlock: (userEmail) ->
-        sessionRequest.submit sessionConfig.unlock(userEmail), (data) ->
+        sessionRequest.submit config.unlock(userEmail), (data) ->
           session.setMessageSuccess "An unlock e-mail has been sent to your e-mail address."
 
       confirm: (userEmail) ->
-        sessionRequest.submit sessionConfig.confirm(userEmail), (data) ->
+        sessionRequest.submit config.confirm(userEmail), (data) ->
           session.setMessageSuccess "A new confirmation link has been sent to your e-mail address."
 
       reset_password: (userEmail) ->
-        sessionRequest.submit sessionConfig.password_reset(userEmail), (data) ->
+        sessionRequest.submit config.password_reset(userEmail), (data) ->
           session.setMessageSuccess "Reset instructions have been sent to your e-mail address."
 
       register: (userObject) ->
-        sessionRequest.submit sessionConfig.register(userObject), (data) ->
+        sessionRequest.submit config.register(userObject), (data) ->
           validate.isValidUserObject data
           , (data) ->
               session.setUserOnline data
@@ -52,7 +52,7 @@ angular.module('webClientAngularApp')
             session.setMessageError "Register error: Model user is invalid."
 
       change_password: (userEmail, userPassword, userPasswordConfirmation) ->
-        sessionRequest.submit sessionConfig.change_password(userEmail, userPassword, userPasswordConfirmation), (data) ->
+        sessionRequest.submit config.change_password(userEmail, userPassword, userPasswordConfirmation), (data) ->
           session.setMessageSuccess 'Your password has been updated.'
 
     sessionRequest

@@ -56,9 +56,10 @@ describe 'Service: SessionRequest', () ->
       expect(session.messages.error).toEqual 'Login error: Model user is invalid.'
 
     it 'should login with valid user data', () ->
+      statusSuccess = 204
       $httpBackend
         .expect('POST', 'sessions/sign_in.json', '{"user":{"email":"test@example.com","password":"apassword"}}')
-        .respond statusWithoutContent,
+        .respond statusSuccess,
           name: "User test"
           email: "test@example.com"
 

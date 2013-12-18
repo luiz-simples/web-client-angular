@@ -5,13 +5,18 @@ angular.module('webClientAngularApp', [
   'ngResource',
   'ngSanitize',
   'ui.router'
-])
-  .config ($stateProvider, $urlRouterProvider) ->
-    $urlRouterProvider.otherwise "/"
-
-    $stateProvider.state
+]).config ($stateProvider, $urlRouterProvider) ->
+  $stateProvider
+    .state
       url: "/"
       name: "home"
       controller: 'MainCtrl'
       templateUrl: "views/main.html"
 
+    .state
+      url: "/login"
+      name: "login"
+      controller: 'LoginCtrl'
+      templateUrl: "views/session/login.html"
+
+  $urlRouterProvider.otherwise "/"
