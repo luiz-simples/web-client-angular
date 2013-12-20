@@ -16,8 +16,8 @@ angular.module('webClientAngularApp')
           session.setMessageError messageError
           callbackError(data, status) if callbackError
 
-      login: (userEmail, userPassword) ->
-        sessionRequest.submit config.login(userEmail, userPassword), (data) ->
+      login: (user) ->
+        sessionRequest.submit config.login(user.email, user.password), (data) ->
           validate.isValidUserObject data
           , (data) ->
               session.setUserOnline data
@@ -38,8 +38,8 @@ angular.module('webClientAngularApp')
         sessionRequest.submit config.confirm(userEmail), (data) ->
           session.setMessageSuccess "A new confirmation link has been sent to your e-mail address."
 
-      reset_password: (userEmail) ->
-        sessionRequest.submit config.password_reset(userEmail), (data) ->
+      remember: (userEmail) ->
+        sessionRequest.submit config.remember(userEmail), (data) ->
           session.setMessageSuccess "Reset instructions have been sent to your e-mail address."
 
       register: (userObject) ->

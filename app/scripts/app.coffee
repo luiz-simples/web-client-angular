@@ -7,16 +7,25 @@ angular.module('webClientAngularApp', [
   'ui.router'
 ]).config ($stateProvider, $urlRouterProvider) ->
   $stateProvider
-    .state
-      url: "/"
-      name: "home"
-      controller: 'MainCtrl'
-      templateUrl: "views/main.html"
+    .state 'session',
+      abstract: true
+      views:
+        "":
+          templateUrl: 'views/session/session.html'
+          controller: 'SessionCtrl'
 
     .state
+      parent: 'session'
       url: "/login"
       name: "login"
-      controller: 'LoginCtrl'
+      controller: 'SessionCtrl'
       templateUrl: "views/session/login.html"
 
-  $urlRouterProvider.otherwise "/"
+    .state
+      parent: 'session'
+      url: "/sign-up"
+      name: "sign-up"
+      controller: 'SessionCtrl'
+      templateUrl: "views/session/sign-up.html"
+
+  $urlRouterProvider.otherwise "/login"

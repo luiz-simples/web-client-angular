@@ -14,10 +14,15 @@ describe 'Service: SessionRequest', () ->
   session = {}
   isOffline = false
   isLogged = true
+  nameFake = "User test"
   emailFake = "test@example.com"
   uservalid =
-    name: "User test"
-    email: "test@example.com"
+    name: nameFake
+    email: emailFake
+
+  userAuthenticatable =
+    email: emailFake
+    password: "apassword"
 
   setUserFakeLogged = () ->
     session.setUserOnline uservalid
@@ -40,9 +45,7 @@ describe 'Service: SessionRequest', () ->
         .expect('POST', 'sessions/sign_in.json', '{"user":{"email":"test@example.com","password":"apassword"}}')
         .respond(statusCreated, '')
 
-      userEmail = 'test@example.com'
-      userPassword = 'apassword'
-      sessionRequest.login(userEmail, userPassword)
+      sessionRequest.login(userAuthenticatable)
 
       $httpBackend.flush()
       expect(session.logged).toBe isOffline
@@ -63,9 +66,7 @@ describe 'Service: SessionRequest', () ->
           name: "User test"
           email: "test@example.com"
 
-      userEmail = 'test@example.com'
-      userPassword = 'apassword'
-      sessionRequest.login(userEmail, userPassword)
+      sessionRequest.login(userAuthenticatable)
 
       $httpBackend.flush()
 
@@ -85,9 +86,7 @@ describe 'Service: SessionRequest', () ->
         .respond statusPartialInformation,
           name: "User test"
 
-      userEmail = 'test@example.com'
-      userPassword = 'apassword'
-      sessionRequest.login(userEmail, userPassword)
+      sessionRequest.login(userAuthenticatable)
 
       $httpBackend.flush()
       expect(session.logged).toBe isOffline
@@ -108,9 +107,7 @@ describe 'Service: SessionRequest', () ->
         .respond statusPartialInformation,
           email: "test@example.com"
 
-      userEmail = 'test@example.com'
-      userPassword = 'apassword'
-      sessionRequest.login(userEmail, userPassword)
+      sessionRequest.login(userAuthenticatable)
 
       $httpBackend.flush()
       expect(session.logged).toBe isOffline
@@ -184,14 +181,14 @@ describe 'Service: SessionRequest', () ->
   describe 'Password reset:', () ->
     it 'success 204', () ->
       $httpBackend.expect('POST', 'sessions/password.json', '{"user":{"email":"test@example.com"}}').respond 204, ''
-      sessionRequest.reset_password emailFake
+      sessionRequest.remember emailFake
       $httpBackend.flush()
       expect(session.messages.error).toEqual null
       expect(session.messages.success).toEqual 'Reset instructions have been sent to your e-mail address.'
 
     it 'fail 401', () ->
       $httpBackend.expect('POST', 'sessions/password.json', '{"user":{"email":"test@example.com"}}').respond 401, 'Error message Password reset'
-      sessionRequest.reset_password emailFake
+      sessionRequest.remember emailFake
       $httpBackend.flush()
       expect(session.messages.error).toEqual 'Unexplained error, potentially a server error, please report via support channels as this indicates a code defect. Server response was: "Error message Password reset"'
       expect(session.messages.success).toEqual null

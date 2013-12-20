@@ -336,10 +336,13 @@ module.exports = function (grunt) {
         'compass:server',
         'copy:styles'
       ],
-      test: [
+      testE2E: [
         'coffee',
         'compass',
         'copy:styles'
+      ],
+      testUnit: [
+        'coffee'
       ],
       dist: [
         'coffee',
@@ -424,15 +427,13 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test-unit', [
     'clean:server',
-    'concurrent:test',
-    'autoprefixer',
-    'connect:test',
+    'concurrent:testUnit',
     'karma'
   ]);
 
   grunt.registerTask('test-e2e', [
     'clean:server',
-    'concurrent:test',
+    'concurrent:testE2E',
     'autoprefixer',
     'connect:test',
     'protractor:run'

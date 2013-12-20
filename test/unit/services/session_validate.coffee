@@ -22,36 +22,36 @@ describe 'Service: SessionValidate', () ->
     objExist = true
     expect(!!validate).toBe objExist
 
-  describe 'isValidEmail: ', () ->
+  describe 'isEmail: ', () ->
     it 'should return invalid if email without @', () ->
-      expect(validate.isEmailValid("teste.com.br")).toBe emailInvalid
+      expect(validate.isEmail("teste.com.br")).toBe emailInvalid
 
     it 'should return invalid if no letters before the @', () ->
-      expect(validate.isEmailValid("@teste.com.br")).toBe emailInvalid
+      expect(validate.isEmail("@teste.com.br")).toBe emailInvalid
 
     it 'should return invalid if no letters after the @', () ->
-      expect(validate.isEmailValid("ass@")).toBe emailInvalid
+      expect(validate.isEmail("ass@")).toBe emailInvalid
 
     it 'should return invalid if no letters after the @', () ->
-      expect(validate.isEmailValid("ass@")).toBe emailInvalid
+      expect(validate.isEmail("ass@")).toBe emailInvalid
 
     it 'should return invalid if email empty', () ->
-      expect(validate.isEmailValid("")).toBe emailInvalid
+      expect(validate.isEmail("")).toBe emailInvalid
 
     it 'should return valid if email with one point', () ->
-      expect(validate.isEmailValid("user@teste.com")).toBe emailValid
+      expect(validate.isEmail("user@teste.com")).toBe emailValid
 
     it 'should return valid if email without point', () ->
-      expect(validate.isEmailValid("user@teste")).toBe emailInvalid
+      expect(validate.isEmail("user@teste")).toBe emailInvalid
 
     it 'should return valid if email with two points', () ->
-      expect(validate.isEmailValid("user@teste.com.br")).toBe emailValid
+      expect(validate.isEmail("user@teste.com.br")).toBe emailValid
 
     it 'should return invalid if email is null', () ->
-      expect(validate.isEmailValid(null)).toBe emailInvalid
+      expect(validate.isEmail(null)).toBe emailInvalid
 
     it 'should return invalid if email is undefined', () ->
-      expect(validate.isEmailValid(undefined)).toBe emailInvalid
+      expect(validate.isEmail(undefined)).toBe emailInvalid
 
   describe 'isEmpty: ', () ->
     it 'should return true if string is empty', () ->

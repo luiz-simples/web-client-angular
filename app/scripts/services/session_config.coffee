@@ -34,7 +34,7 @@ angular.module('webClientAngularApp')
           email: userEmail
           password: userPassword
 
-    password_reset: (userEmail) ->
+    remember: (userEmail) ->
       method: 'POST',
       url: 'sessions/password.json',
       data:

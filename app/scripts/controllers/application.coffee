@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('webClientAngularApp')
-  .controller 'MainCtrl', ($scope) ->
+  .controller 'ApplicationCtrl', ($scope) ->
     $scope.awesomeThings = [
       'HTML5 Boilerplate'
       'AngularJS'

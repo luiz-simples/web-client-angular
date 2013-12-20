@@ -1,17 +1,17 @@
 'use strict'
 
-describe 'Controller: MainCtrl', () ->
+describe 'Controller: ApplicationCtrl', () ->
 
   # load the controller's module
   beforeEach module 'webClientAngularApp'
 
-  MainCtrl = {}
+  ApplicationCtrl = {}
   scope = {}
 
   # Initialize the controller and a mock scope
   beforeEach inject ($controller, $rootScope) ->
     scope = $rootScope.$new()
-    MainCtrl = $controller 'MainCtrl', {
+    ApplicationCtrl = $controller 'ApplicationCtrl', {
       $scope: scope
     }
 

@@ -3,17 +3,21 @@
 angular.module('webClientAngularApp')
   .service 'SessionValidate', () ->
     validate =
-      isEmailValid: (email) ->
-        not (email in [null, undefined]) and (/^((?!\.)[a-z0-9._%+-]+(?!\.)\w)@[a-z0-9-\.]+\.[a-z.]{2,5}(?!\.)\w$/i.test email)
+      isEmail: (email, callback) ->
+        emailValid = not (email in [null, undefined]) and (/^((?!\.)[a-z0-9._%+-]+(?!\.)\w)@[a-z0-9-\.]+\.[a-z.]{2,5}(?!\.)\w$/i.test email)
+        if !emailValid and callback? then callback()
+        emailValid
 
       isEmpty: (string) ->
         (string in [null, undefined]) or not (/([^\s])/.test string)
 
-      isNotEmpty: (string) ->
-        not validate.isEmpty string
+      isNotEmpty: (string, callback) ->
+        stringFilled = not validate.isEmpty string
+        if !stringFilled and callback? then callback()
+        stringFilled
 
       isValidUserObject: (data, callbackIfTrue, callbackIfFalse) ->
-        if data instanceof Object and validate.isNotEmpty(data.email) and validate.isEmailValid(data.email) and validate.isNotEmpty(data.name)
-          callbackIfTrue(data)
-        else
-          callbackIfFalse(data)
+        validUser = data instanceof Object and validate.isNotEmpty(data.email) and validate.isEmail(data.email) and validate.isNotEmpty(data.name)
+        if validUser then callbackIfTrue(data) else callbackIfFalse(data)
+
+    validate
